@@ -1,0 +1,516 @@
+import React, { useState } from 'react';
+import { X, Copy, Check, Download, FileCode, ExternalLink } from 'lucide-react';
+import { Language } from '../types';
+
+interface StandaloneHtmlExporterProps {
+  isOpen: boolean;
+  onClose: () => void;
+  lang: Language;
+  phoneNumber: string;
+}
+
+export const StandaloneHtmlExporter: React.FC<StandaloneHtmlExporterProps> = ({
+  isOpen,
+  onClose,
+  lang,
+  phoneNumber,
+}) => {
+  const [copied, setCopied] = useState(false);
+
+  if (!isOpen) return null;
+
+  const standaloneHtmlCode = `<!DOCTYPE html>
+<html lang="en" dir="ltr" id="docRoot">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AYLIN Pharmacy | صيدلية أيلين - Your Trusted Neighborhood Pharmacy</title>
+  <meta name="description" content="AYLIN Pharmacy - Fast prescription fulfillment, expert pharmacist advice, and healthcare products.">
+  
+  <!-- Google Fonts: Poppins (English) & Cairo (Arabic) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandYellow: '#FFDD00',
+            brandBlue: '#0055A4',
+            brandBlueHover: '#004482',
+            brandDark: '#002D57',
+            brandText: '#2F4F4F',
+          },
+          fontFamily: {
+            poppins: ['Poppins', 'sans-serif'],
+            cairo: ['Cairo', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html[dir="ltr"] { font-family: 'Poppins', sans-serif; }
+    html[dir="rtl"] { font-family: 'Cairo', sans-serif; }
+    body { color: #2F4F4F; background-color: #FFFFFF; }
+    .smooth-scroll { scroll-behavior: smooth; }
+  </style>
+</head>
+<body class="smooth-scroll bg-[#FFFFFF] antialiased">
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-[#002D57] text-white text-xs sm:text-sm py-2 px-4 border-b border-blue-900">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-[#FFDD00]"></span>
+        <span id="topBarHours">Sat - Thu: 9:00 AM - 11:30 PM | Fri: 2:00 PM - 11:30 PM</span>
+      </div>
+      <div class="flex items-center gap-4 text-blue-200">
+        <span id="topBarAddress">Commercial Blvd, Building 42</span>
+        <a href="tel:+966123456789" class="text-[#FFDD00] hover:underline font-mono">+966 12 345 6789</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Left Side (LTR): Logo & AYLIN Pharmacy Name -->
+        <a href="#hero" class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-[#0055A4] flex items-center justify-center shadow-md">
+            <svg class="w-7 h-7 text-[#FFDD00]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </div>
+          <div>
+            <span class="text-2xl font-black text-[#0055A4] tracking-tight block leading-tight">
+              AYLIN <span class="text-[#FFDD00] bg-[#0055A4] px-1.5 py-0.5 rounded text-sm font-bold text-black">Rx</span>
+            </span>
+            <span id="brandSubname" class="text-xs font-semibold text-[#2F4F4F]">AYLIN Pharmacy</span>
+          </div>
+        </a>
+
+        <!-- Desktop Nav -->
+        <nav class="hidden md:flex items-center gap-6">
+          <a href="#hero" id="navHome" class="text-sm font-semibold text-[#2F4F4F] hover:text-[#0055A4] transition-colors">Home</a>
+          <a href="#features" id="navFeatures" class="text-sm font-semibold text-[#2F4F4F] hover:text-[#0055A4] transition-colors">Key Features</a>
+          <a href="#how-to-order" id="navHowToOrder" class="text-sm font-semibold text-[#2F4F4F] hover:text-[#0055A4] transition-colors">How to Order</a>
+          <a href="#location" id="navLocation" class="text-sm font-semibold text-[#2F4F4F] hover:text-[#0055A4] transition-colors">Location & Hours</a>
+        </nav>
+
+        <!-- Right Side (LTR): Language Switcher & WhatsApp CTA -->
+        <div class="flex items-center gap-3">
+          <button id="langToggleBtn" onclick="toggleLanguage()" class="px-3.5 py-2 rounded-xl border-2 border-[#0055A4] text-[#0055A4] hover:bg-blue-50 font-bold text-xs sm:text-sm flex items-center gap-2">
+            <span>🌐</span>
+            <span id="langBtnText">English / العربية</span>
+          </button>
+
+          <a id="headerWhatsAppBtn" href="https://wa.me/${phoneNumber}?text=Hello%20Aylin%20Pharmacy,%20I%20would%20like%20to%20place%20an%20order." target="_blank" class="px-5 py-2.5 rounded-xl bg-[#FFDD00] hover:bg-[#ebd000] text-black font-extrabold text-xs sm:text-sm shadow-md border border-amber-400">
+            💬 <span id="headerWhatsAppText">Order via WhatsApp</span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="hero" class="py-16 sm:py-24 bg-gradient-to-b from-blue-50/60 to-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-start">
+      <div class="max-w-3xl">
+        <div class="inline-block px-3 py-1 mb-4 rounded-full bg-blue-100 text-[#0055A4] text-xs font-bold uppercase tracking-wider">
+          AYLIN Community Health
+        </div>
+        <h1 id="heroHeadline" class="text-3xl sm:text-5xl font-extrabold text-[#0055A4] leading-tight mb-6">
+          Your Trusted Neighborhood Pharmacy for Health and Wellness.
+        </h1>
+        <p id="heroSubheadline" class="text-lg sm:text-xl text-[#2F4F4F] mb-8 leading-relaxed">
+          Fast prescription fulfillment, expert advice, and a wide range of healthcare products.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center gap-4">
+          <a id="heroCtaBtn" href="https://wa.me/${phoneNumber}?text=Hello%20Aylin%20Pharmacy,%20I%20would%20like%20to%20place%20an%20order." target="_blank" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-[#FFDD00] hover:bg-[#ebd000] text-black font-extrabold text-base shadow-lg border border-amber-400 text-center">
+            💬 <span id="heroCtaText">Order via WhatsApp</span>
+          </a>
+          <a href="#location" class="w-full sm:w-auto px-6 py-4 rounded-xl bg-white border-2 border-[#0055A4] text-[#0055A4] font-bold text-base hover:bg-blue-50 text-center">
+            <span id="heroLocationBtn">View Location & Hours</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Features Section (3 cards) -->
+  <section id="features" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <h2 id="featuresTitle" class="text-3xl font-extrabold text-[#0055A4]">Why Choose AYLIN Pharmacy?</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Card 1 -->
+        <div class="bg-slate-50 hover:bg-white rounded-3xl p-8 border border-slate-200 hover:border-[#0055A4] shadow-sm hover:shadow-xl transition-all">
+          <div class="w-12 h-12 rounded-xl bg-[#0055A4] text-[#FFDD00] flex items-center justify-center text-2xl font-bold mb-6">⚡</div>
+          <h3 id="card1Title" class="text-xl font-bold text-[#0055A4] mb-3">Fast Prescription Service</h3>
+          <p id="card1Desc" class="text-sm text-[#2F4F4F] leading-relaxed">Upload your prescription via WhatsApp for quick preparation and pickup.</p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-slate-50 hover:bg-white rounded-3xl p-8 border border-slate-200 hover:border-[#0055A4] shadow-sm hover:shadow-xl transition-all">
+          <div class="w-12 h-12 rounded-xl bg-[#FFDD00] text-black flex items-center justify-center text-2xl font-bold mb-6">👨‍⚕️</div>
+          <h3 id="card2Title" class="text-xl font-bold text-[#0055A4] mb-3">Expert Pharmacist Advice</h3>
+          <p id="card2Desc" class="text-sm text-[#2F4F4F] leading-relaxed">Our qualified pharmacists are here to help you with your health questions.</p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-slate-50 hover:bg-white rounded-3xl p-8 border border-slate-200 hover:border-[#0055A4] shadow-sm hover:shadow-xl transition-all">
+          <div class="w-12 h-12 rounded-xl bg-[#0055A4] text-white flex items-center justify-center text-2xl font-bold mb-6">📦</div>
+          <h3 id="card3Title" class="text-xl font-bold text-[#0055A4] mb-3">Wide Range of Products</h3>
+          <p id="card3Desc" class="text-sm text-[#2F4F4F] leading-relaxed">From medicines to baby care and cosmetics, we have you covered.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How to Order Section (3 steps) -->
+  <section id="how-to-order" class="py-20 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <h2 id="orderSectionTitle" class="text-3xl font-extrabold text-[#0055A4]">How to Order</h2>
+        <p id="orderSectionSub" class="text-sm text-[#2F4F4F] mt-2">Get your medications in 3 simple steps.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-md">
+          <span class="text-3xl font-black text-[#FFDD00] block mb-4">01</span>
+          <h3 id="step1Title" class="text-lg font-bold text-[#0055A4] mb-2">Click "Order via WhatsApp"</h3>
+          <p id="step1Desc" class="text-xs text-[#2F4F4F]">Initiate a direct chat with our pharmacy team.</p>
+        </div>
+        <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-md">
+          <span class="text-3xl font-black text-[#0055A4] block mb-4">02</span>
+          <h3 id="step2Title" class="text-lg font-bold text-[#0055A4] mb-2">Upload a photo of your prescription</h3>
+          <p id="step2Desc" class="text-xs text-[#2F4F4F]">Attach a picture of your prescription or medication names.</p>
+        </div>
+        <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-md">
+          <span class="text-3xl font-black text-emerald-600 block mb-4">03</span>
+          <h3 id="step3Title" class="text-lg font-bold text-[#0055A4] mb-2">We'll confirm and prepare your order for pickup</h3>
+          <p id="step3Desc" class="text-xs text-[#2F4F4F]">Receive confirmation and pickup time immediately.</p>
+        </div>
+      </div>
+      <div class="text-center">
+        <a id="stepsCtaBtn" href="https://wa.me/${phoneNumber}?text=Hello%20Aylin%20Pharmacy,%20I%20would%20like%20to%20place%20an%20order." target="_blank" class="inline-block px-8 py-4 rounded-xl bg-[#FFDD00] hover:bg-[#ebd000] text-black font-extrabold text-base shadow-md">
+          💬 <span id="stepsCtaText">Order via WhatsApp</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Location & Hours Section -->
+  <section id="location" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <h2 id="locationSectionTitle" class="text-3xl font-extrabold text-[#0055A4]">Location & Hours</h2>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+        
+        <!-- Info -->
+        <div class="space-y-6">
+          <div class="p-6 rounded-3xl bg-blue-50 border border-blue-200">
+            <h3 id="addressHeading" class="text-lg font-bold text-[#0055A4] mb-2">Address</h3>
+            <p id="addressText" class="text-sm font-semibold text-[#2F4F4F]">[Your Pharmacy's Full Address Here]</p>
+          </div>
+
+          <div class="p-6 rounded-3xl bg-amber-50/70 border border-amber-200">
+            <h3 id="hoursHeading" class="text-lg font-bold text-[#0055A4] mb-3">Opening Hours</h3>
+            <p id="hoursText" class="text-sm font-bold text-[#2F4F4F] leading-relaxed">
+              Sat - Thu: 9:00 AM - 11:30 PM | Fri: 2:00 PM - 11:30 PM
+            </p>
+          </div>
+
+          <div class="flex gap-4">
+            <a href="tel:+966123456789" class="flex-1 py-3 px-4 rounded-xl bg-[#0055A4] text-white font-bold text-center text-sm">
+              📞 <span id="callBtnText">Call Pharmacy</span>
+            </a>
+            <a id="locWhatsAppBtn" href="https://wa.me/${phoneNumber}?text=Hello%20Aylin%20Pharmacy,%20I%20would%20like%20to%20place%20an%20order." target="_blank" class="flex-1 py-3 px-4 rounded-xl bg-[#FFDD00] text-black font-bold text-center text-sm border border-amber-400">
+              💬 <span id="locWhatsAppText">Order via WhatsApp</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Google Maps Iframe Placeholder -->
+        <div class="rounded-3xl overflow-hidden border border-slate-200 shadow-md h-80 sm:h-96">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d115984.7214736856!2d46.60226348604739!3d24.71355172288307!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2f03890d48939b%3A0x7d6a5c1813b5ff2!2sRiyadh%20Saudi%20Arabia!5e0!3m2!1sen!2s!4v1700000000000!5m2!1sen!2s" 
+            width="100%" 
+            height="100%" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy">
+          </iframe>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-[#002D57] text-white py-12 border-t-4 border-[#FFDD00]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div>
+        <h4 class="text-xl font-bold">AYLIN Pharmacy</h4>
+        <p id="footerContact" class="text-xs text-blue-200 mt-1">Contact: +966 12 345 6789 | WhatsApp: ${phoneNumber}</p>
+        <div class="flex gap-4 mt-3 text-sm">
+          <a href="https://instagram.com" target="_blank" class="hover:text-[#FFDD00]">Instagram</a>
+          <a href="https://facebook.com" target="_blank" class="hover:text-[#FFDD00]">Facebook</a>
+        </div>
+      </div>
+      <div class="text-xs text-blue-300">
+        <span id="footerCopy">© 2026 AYLIN Pharmacy. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bilingual Toggle Script -->
+  <script>
+    let currentLang = 'en';
+
+    const translations = {
+      en: {
+        dir: 'ltr',
+        btnLabel: 'English / العربية',
+        topHours: 'Sat - Thu: 9:00 AM - 11:30 PM | Fri: 2:00 PM - 11:30 PM',
+        topAddress: 'Commercial Blvd, Building 42',
+        brandSubname: 'AYLIN Pharmacy',
+        navHome: 'Home',
+        navFeatures: 'Key Features',
+        navHowToOrder: 'How to Order',
+        navLocation: 'Location & Hours',
+        orderBtn: 'Order via WhatsApp',
+        heroHeadline: 'Your Trusted Neighborhood Pharmacy for Health and Wellness.',
+        heroSubheadline: 'Fast prescription fulfillment, expert advice, and a wide range of healthcare products.',
+        heroLocation: 'View Location & Hours',
+        featuresTitle: 'Why Choose AYLIN Pharmacy?',
+        card1Title: 'Fast Prescription Service',
+        card1Desc: 'Upload your prescription via WhatsApp for quick preparation and pickup.',
+        card2Title: 'Expert Pharmacist Advice',
+        card2Desc: 'Our qualified pharmacists are here to help you with your health questions.',
+        card3Title: 'Wide Range of Products',
+        card3Desc: 'From medicines to baby care and cosmetics, we have you covered.',
+        orderSectionTitle: 'How to Order',
+        orderSectionSub: 'Get your medications in 3 simple steps.',
+        step1Title: 'Click "Order via WhatsApp"',
+        step1Desc: 'Initiate a direct chat with our pharmacy team.',
+        step2Title: 'Upload a photo of your prescription',
+        step2Desc: 'Attach a picture of your prescription or medication names.',
+        step3Title: "We'll confirm and prepare your order for pickup",
+        step3Desc: 'Receive confirmation and pickup time immediately.',
+        locationSectionTitle: 'Location & Hours',
+        addressHeading: 'Address',
+        addressText: "[Your Pharmacy's Full Address Here]",
+        hoursHeading: 'Opening Hours',
+        hoursText: 'Sat - Thu: 9:00 AM - 11:30 PM | Fri: 2:00 PM - 11:30 PM',
+        callPharmacy: 'Call Pharmacy',
+        footerContact: 'Contact: +966 12 345 6789 | WhatsApp: ${phoneNumber}',
+        footerCopy: '© 2026 AYLIN Pharmacy. All rights reserved.',
+        waText: 'Hello%20Aylin%20Pharmacy,%20I%20would%20like%20to%20place%20an%20order.'
+      },
+      ar: {
+        dir: 'rtl',
+        btnLabel: 'العربية / English',
+        topHours: 'السبت - الخميس: 9:00 صباحًا - 11:30 مساءً | الجمعة: 2:00 ظهرًا - 11:30 مساءً',
+        topAddress: 'الشارع التجاري، مبنى 42',
+        brandSubname: 'صيدلية أيلين',
+        navHome: 'الرئيسية',
+        navFeatures: 'خدماتنا',
+        navHowToOrder: 'طريقة الطلب',
+        navLocation: 'الموقع وساعات العمل',
+        orderBtn: 'اطلب عبر الواتساب',
+        heroHeadline: 'صيدليتك الموثوقة لصحة وعافية حيك.',
+        heroSubheadline: 'صرف سريع للوصفات الطبية، نصائح من الخبراء، ومجموعة واسعة من منتجات الرعاية الصحية.',
+        heroLocation: 'عرض الموقع وساعات العمل',
+        featuresTitle: 'لماذا تختار صيدلية أيلين؟',
+        card1Title: 'خدمة وصفات طبية سريعة',
+        card1Desc: 'حمّل وصفتك الطبية عبر الواتساب لتجهيزها واستلامها بسرعة.',
+        card2Title: 'نصائح صيدلانية متخصصة',
+        card2Desc: 'صيادلتنا المؤهلون جاهزون لمساعدتك في استفساراتك الصحية.',
+        card3Title: 'مجموعة واسعة من المنتجات',
+        card3Desc: 'من الأدوية إلى مستلزمات الأطفال ومستحضرات التجميل، كل ما تحتاجه متوفر لدينا.',
+        orderSectionTitle: 'طريقة الطلب',
+        orderSectionSub: 'احصل على أدويتك في 3 خطوات بسيطة.',
+        step1Title: 'اضغط على "اطلب عبر الواتساب"',
+        step1Desc: 'ابدأ محادثة مباشرة مع صيدلية أيلين.',
+        step2Title: 'حمّل صورة من وصفتك الطبية',
+        step2Desc: 'ارفق صورة من وصفتك الطبية أو اكتب أسماء الأدوية.',
+        step3Title: 'سنؤكد طلبك ونجهزه للاستلام',
+        step3Desc: 'استلم تأكيد الطلب ووقت الاستلام فوراً.',
+        locationSectionTitle: 'الموقع وساعات العمل',
+        addressHeading: 'العنوان',
+        addressText: '[عنوان الصيدلية الكامل هنا]',
+        hoursHeading: 'ساعات العمل',
+        hoursText: 'السبت - الخميس: 9:00 صباحًا - 11:30 مساءً | الجمعة: 2:00 ظهرًا - 11:30 مساءً',
+        callPharmacy: 'الاتصال بالصيدلية',
+        footerContact: 'الهاتف: 6789 345 12 966+ | واتساب: ${phoneNumber}',
+        footerCopy: '© 2026 صيدلية أيلين. جميع الحقوق محفوظة.',
+        waText: encodeURIComponent('مرحبا صيدلية أيلين، أود تقديم طلب جديد.')
+      }
+    };
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'en' ? 'ar' : 'en';
+      const t = translations[currentLang];
+      
+      // Toggle RTL / LTR layout
+      document.getElementById('docRoot').setAttribute('dir', t.dir);
+      document.getElementById('docRoot').setAttribute('lang', currentLang);
+
+      // Update text contents
+      document.getElementById('langBtnText').textContent = t.btnLabel;
+      document.getElementById('topBarHours').textContent = t.topHours;
+      document.getElementById('topBarAddress').textContent = t.topAddress;
+      document.getElementById('brandSubname').textContent = t.brandSubname;
+      document.getElementById('navHome').textContent = t.navHome;
+      document.getElementById('navFeatures').textContent = t.navFeatures;
+      document.getElementById('navHowToOrder').textContent = t.navHowToOrder;
+      document.getElementById('navLocation').textContent = t.navLocation;
+      document.getElementById('headerWhatsAppText').textContent = t.orderBtn;
+      
+      document.getElementById('heroHeadline').textContent = t.heroHeadline;
+      document.getElementById('heroSubheadline').textContent = t.heroSubheadline;
+      document.getElementById('heroCtaText').textContent = t.orderBtn;
+      document.getElementById('heroLocationBtn').textContent = t.heroLocation;
+
+      document.getElementById('featuresTitle').textContent = t.featuresTitle;
+      document.getElementById('card1Title').textContent = t.card1Title;
+      document.getElementById('card1Desc').textContent = t.card1Desc;
+      document.getElementById('card2Title').textContent = t.card2Title;
+      document.getElementById('card2Desc').textContent = t.card2Desc;
+      document.getElementById('card3Title').textContent = t.card3Title;
+      document.getElementById('card3Desc').textContent = t.card3Desc;
+
+      document.getElementById('orderSectionTitle').textContent = t.orderSectionTitle;
+      document.getElementById('orderSectionSub').textContent = t.orderSectionSub;
+      document.getElementById('step1Title').textContent = t.step1Title;
+      document.getElementById('step1Desc').textContent = t.step1Desc;
+      document.getElementById('step2Title').textContent = t.step2Title;
+      document.getElementById('step2Desc').textContent = t.step2Desc;
+      document.getElementById('step3Title').textContent = t.step3Title;
+      document.getElementById('step3Desc').textContent = t.step3Desc;
+      document.getElementById('stepsCtaText').textContent = t.orderBtn;
+
+      document.getElementById('locationSectionTitle').textContent = t.locationSectionTitle;
+      document.getElementById('addressHeading').textContent = t.addressHeading;
+      document.getElementById('addressText').textContent = t.addressText;
+      document.getElementById('hoursHeading').textContent = t.hoursHeading;
+      document.getElementById('hoursText').textContent = t.hoursText;
+      document.getElementById('callBtnText').textContent = t.callPharmacy;
+      document.getElementById('locWhatsAppText').textContent = t.orderBtn;
+
+      document.getElementById('footerContact').textContent = t.footerContact;
+      document.getElementById('footerCopy').textContent = t.footerCopy;
+
+      // Update WhatsApp URL query string
+      const waUrl = 'https://wa.me/${phoneNumber}?text=' + t.waText;
+      document.getElementById('headerWhatsAppBtn').href = waUrl;
+      document.getElementById('heroCtaBtn').href = waUrl;
+      document.getElementById('stepsCtaBtn').href = waUrl;
+      document.getElementById('locWhatsAppBtn').href = waUrl;
+    }
+  </script>
+</body>
+</html>`;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(standaloneHtmlCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
+
+  const handleDownload = () => {
+    const blob = new Blob([standaloneHtmlCode], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'index.html';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm animate-in fade-in duration-150">
+      <div 
+        className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[85vh]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="bg-[#0055A4] text-white p-5 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <FileCode className="w-5 h-5 text-[#FFDD00]" />
+            <div>
+              <h3 className="text-base font-bold">
+                {lang === 'ar' ? 'ملف HTML المستقل والكامل (Single-File index.html)' : 'Complete Standalone Single-File index.html'}
+              </h3>
+              <p className="text-xs text-blue-200">
+                {lang === 'ar' ? 'احفظ هذا الكود كـ index.html على جهازك ليعمل فوراً دون أي إعدادات إضافية' : 'Save as index.html on your computer for instant zero-dependency execution'}
+              </p>
+            </div>
+          </div>
+          <button 
+            onClick={onClose}
+            className="p-1 rounded-lg hover:bg-white/20 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Toolbar & Action Bar */}
+        <div className="p-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+          <div className="text-xs text-[#2F4F4F]">
+            <strong>{lang === 'ar' ? 'محتوى الملف:' : 'File spec:'}</strong> Tailwind CDN + Poppins & Cairo + English/Arabic JS Toggle + RTL
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleCopy}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-xs font-bold text-[#0055A4] shadow-xs transition-all"
+            >
+              {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+              <span>{copied ? (lang === 'ar' ? 'تم النسخ!' : 'Copied!') : (lang === 'ar' ? 'نسخ الكود' : 'Copy Code')}</span>
+            </button>
+            <button
+              onClick={handleDownload}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#FFDD00] hover:bg-[#ebd000] text-black font-extrabold text-xs shadow-md border border-amber-400 transition-all"
+            >
+              <Download className="w-4 h-4" />
+              <span>{lang === 'ar' ? 'تحميل ملف index.html' : 'Download index.html'}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Code Preview box */}
+        <div className="p-4 bg-slate-950 overflow-auto flex-1 font-mono text-xs text-slate-200 leading-relaxed select-all">
+          <pre><code>{standaloneHtmlCode}</code></pre>
+        </div>
+
+        {/* Footer info */}
+        <div className="p-4 bg-white border-t border-slate-200 flex items-center justify-between text-xs text-[#2F4F4F]">
+          <span>{lang === 'ar' ? 'ملف كامل مستقل وجاهز للإنتاج' : 'Production-ready self-contained static HTML'}</span>
+          <button
+            onClick={onClose}
+            className="px-4 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold"
+          >
+            {lang === 'ar' ? 'إغلاق' : 'Close'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};

@@ -1,0 +1,6 @@
+{
+  "name": "AYLIN Pharmacy - صيدلية أيلين",
+  "description": "Bilingual (English & Arabic) responsive pharmacy website with RTL support, prescription ordering via WhatsApp, location, and working hours.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
